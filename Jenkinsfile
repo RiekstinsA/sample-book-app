@@ -13,7 +13,7 @@ pipeline {
         stage('Deploy to DEV') {
             steps {
                 script{
-                    deploy("DEV")
+                    deploy("DEV", 1010)
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
         stage('Deploy to STG') {
             steps {
                 script{
-                    deploy("STG")
+                    deploy("STG", 2020)
                 }
             }
         }
@@ -41,7 +41,7 @@ pipeline {
         stage('Deploy to PRD') {
             steps{  
                 script{
-                    deploy("PRD")
+                    deploy("PRD", 3030)
                 }
             }
         }
@@ -55,6 +55,12 @@ pipeline {
     }
 }
 
+ def build(){
+    echo "Building of node application is starting.."
+    bat "ls"
+    bat "npm install"
+}
+ 
  def deploy(String environment, int port){
     echo "Deployment to ${environment} has started.."
     git branch: 'jenkins_pipeline_windows', poll: false, url: 'https://github.com/RiekstinsA/sample-book-app.git'
@@ -66,8 +72,4 @@ pipeline {
 
 def test(String environment){
     echo "Testing to ${environment} has started.."
-}
-
-def build(){
-    echo "Building of node application is starting.."
 }
