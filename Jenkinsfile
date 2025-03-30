@@ -24,9 +24,11 @@ pipeline {
             }
         }
         stage('Deploy to STG') {
+            steps {
                 script{
                     deploy("STG")
                 }
+            }
         }
         stage('Tests on STG') {
             steps {
@@ -36,9 +38,11 @@ pipeline {
             }
         }
         stage('Deploy to PRD') {
+            steps{  
                 script{
                     deploy("PRD")
                 }
+            }
         }
         stage('Tests on PRD') {
             steps {
