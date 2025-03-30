@@ -55,9 +55,14 @@ pipeline {
     }
 }
 
-def deploy(String environment){
+ def deploy(String environment, int port){
     echo "Deployment to ${environment} has started.."
-}
+    git branch: 'jenkins_pipeline_windows', poll: false, url: 'https://github.com/RiekstinsA/sample-book-app.git'
+    bat "npm install"
+    bat "dir"
+    bat "node_modules\\.bin\\pm2 delete \"books-${environment}\" || exit 0"
+    bat "node_modules\\.bin\\pm2 start -n \"books-${environment}\" index.js -- ${port}"
+ }
 
 def test(String environment){
     echo "Testing to ${environment} has started.."
