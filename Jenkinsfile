@@ -88,6 +88,7 @@ pipeline {
 
 def installPipDeps() {
     echo "Cloning the repository and installing pip dependencies..."
+    bat "Remove-Item -Recurse -Force python-greetings"
     bat "git clone https://github.com/RiekstinsA/python-greetings"
     bat "dir"
     bat "pip install -r python-greetings/requirements.txt"
@@ -95,6 +96,7 @@ def installPipDeps() {
 
 def deploy(String environment, int port) {
     echo "Deploying to ${environment} environment..."
+    bat "Remove-Item -Recurse -Force python-greetings"
     bat "git clone https://github.com/RiekstinsA/python-greetings"
     bat "dir"
     bat "node_modules\\.bin\\pm2 delete \"greetings-app-${environment}\" || exit 0"
@@ -103,6 +105,7 @@ def deploy(String environment, int port) {
 
 def test(String environment) {
     echo "Running tests on ${environment} environment..."
+    bat "Remove-Item -Recurse -Force api-automation"
     bat "git clone https://github.com/RiekstinsA/api-automation"
     bat "dir"
     bat "npm install"
