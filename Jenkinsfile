@@ -88,7 +88,7 @@ pipeline {
 
 def installPipDeps() {
     echo "Cloning the repository and installing pip dependencies..."
-    bat "Remove-Item -Recurse -Force python-greetings"
+    bat "IF EXIST python-greetings rmdir /s /q python-greetings"
     bat "git clone https://github.com/RiekstinsA/python-greetings"
     bat "dir"
     bat "pip install -r python-greetings/requirements.txt"
