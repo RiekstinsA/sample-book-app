@@ -88,14 +88,14 @@ pipeline {
 
 def installPipDeps() {
     echo "Cloning the repository and installing pip dependencies..."
-    bat "git clone https://github.com/mtararujs/python-greetings"
+    bat "git clone https://github.com/RiekstinsA/python-greetings"
     bat "dir"
     bat "pip install -r python-greetings/requirements.txt"
 }
 
 def deploy(String environment, int port) {
     echo "Deploying to ${environment} environment..."
-    bat "git clone https://github.com/mtararujs/python-greetings"
+    bat "git clone https://github.com/RiekstinsA/python-greetings"
     bat "dir"
     bat "node_modules\\.bin\\pm2 delete \"greetings-app-${environment}\" || exit 0"
     bat "node_modules\\.bin\\pm2 start app.py --name greetings-app-${environment} --port ${port}"
@@ -103,7 +103,7 @@ def deploy(String environment, int port) {
 
 def test(String environment) {
     echo "Running tests on ${environment} environment..."
-    bat "git clone https://github.com/mtararujs/course-js-api-framework"
+    bat "git clone https://github.com/RiekstinsA/api-automation"
     bat "dir"
     bat "npm install"
     bat "npm run greetings greetings_${environment}"
