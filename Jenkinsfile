@@ -77,15 +77,20 @@ pipeline {
     }
 }
 
-def installDeps() {
-    echo "Cloning the repository and installing pip dependencies..."
+def cloneRepo() {
+    echo "Cloning the repository..."
     git url: 'https://github.com/RiekstinsA/python-greetings'
+}
+
+def installDeps() {
+    cloneRepo()
+    echo "Installing pip dependencies..."
     bat "pip install -r requirements.txt"
 }
 
 def deploy(String environment, int port) {
     echo "Deployment to ${environment} has started.."
-    git url: 'https://github.com/RiekstinsA/python-greetings'
+    cloneRepo()
     bat "pm2 delete greetings-app-${environment} & set errorlevel=0"
     bat "pm2 start app.py --name greetings-app-${environment} -- --port ${port}"
 }
