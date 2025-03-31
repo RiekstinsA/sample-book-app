@@ -1,75 +1,101 @@
 pipeline {
     agent any
-    triggers{ pollSCM('*/1 * * * *') }
+    triggers { pollSCM('*/1 * * * *') }
 
     stages {
-        stage('Build') {
+        stage('Install pip dependencies') {
             steps {
-                script{
-                    build()
+                script {
+                    installPipDeps()
                 }
             }
         }
+
         stage('Deploy to DEV') {
             steps {
-                script{
-                    deploy("DEV", 1010)
+                script {
+                    deploy("dev", 1010)
                 }
             }
         }
+
         stage('Tests on DEV') {
             steps {
-                script{
-                    test("DEV")
+                script {
+                    test("dev")
                 }
             }
         }
+
         stage('Deploy to STG') {
             steps {
-                script{
-                    deploy("STG", 2020)
+                script {
+                    deploy("staging", 2020)
                 }
             }
         }
+
         stage('Tests on STG') {
             steps {
-                script{
-                    test("STG")
+                script {
+                    test("staging")
                 }
             }
         }
-        stage('Deploy to PRD') {
-            steps{  
-                script{
-                    deploy("PRD", 3030)
-                }
-            }
-        }
-        stage('Tests on PRD') {
+
+        stage('Deploy to PREPROD') {
             steps {
-                script{
-                    test("PRD")
+                script {
+                    deploy("preprod", 3030)
+                }
+            }
+        }
+
+        stage('Tests on PREPROD') {
+            steps {
+                script {
+                    test("preprod")
+                }
+            }
+        }
+
+        stage('Deploy to PROD') {
+            steps {
+                script {
+                    deploy("prod", 7004)
+                }
+            }
+        }
+
+        stage('Tests on PROD') {
+            steps {
+                script {
+                    test("prod")
                 }
             }
         }
     }
 }
 
- def build(){
-    echo "Building of node application is starting.."
+def installPipDeps() {
+    echo "Cloning the repository and installing pip dependencies..."
+    bat "git clone https://github.com/mtararujs/python-greetings"
     bat "dir"
-    bat "npm install"
+    bat "pip install -r python-greetings/requirements.txt" 
 }
- 
- def deploy(String environment, int port){
-    echo "Deployment to ${environment} has started.."
-//  git branch: 'jenkins_pipeline_windows', poll: false, url: 'https://github.com/RiekstinsA/sample-book-app.git'
-    bat "npm install"
-    bat "dir"
-    bat "node_modules\\.bin\\pm2 delete \"books-${environment}\" || exit 0"
-    bat "node_modules\\.bin\\pm2 start -n \"books-${environment}\" index.js -- ${port}"
- }
 
-def test(String environment){
-    echo "Testing to ${environment} has started.."
+def deploy(String environment, int port) {
+    echo "Deploying to ${environment}..."
+    bat "git clone https://github.com/mtararujs/python-greetings"
+    bat "dir"
+    bat "node_modules\\.bin\\pm2 delete \"greetings-app-${environment}\" || exit 0"
+    bat "node_modules\\.bin\\pm2 start app.py --name greetings-app-${environment} --port ${port}"
+}
+
+def test(String environment) {
+    echo "Running tests on ${environment}..."
+    bat "git clone https://github.com/mtararujs/course-js-api-framework"
+    bat "dir"
+    bat "npm install"
+    bat "npm run greetings greetings_${environment}"
 }
